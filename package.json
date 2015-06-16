@@ -1,0 +1,23 @@
+{
+  "name": "Lab-NODE5-Using-the-Async-Series-and-Parallel-Modules",
+  "version": "1.0.0",
+  "description": "Assignment5",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/darshanpatil/Lab-NODE5-Using-the-Async-Series-and-Parallel-Modules.git"
+  },
+  "author": "Darshan Patil <darshan.patil@mindstix.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/darshanpatil/Lab-NODE5-Using-the-Async-Series-and-Parallel-Modules/issues"
+  },
+  "homepage": "https://github.com/darshanpatil/Lab-NODE5-Using-the-Async-Series-and-Parallel-Modules",
+  "dependencies": {
+    "async": "^1.2.1",
+    "debug": "^2.2.0"
+  }
+}
