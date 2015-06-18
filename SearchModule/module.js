@@ -1,38 +1,51 @@
 var exports = module.exports = {};
+//Async module to perform parallel task
 var async = require("async");
 var fs = require("fs");
 var finalResult = [];
 
+//Method to find student match in subject files
 exports.searchById = function(qId, res) {
+	//Subject files to read
 	var fileNames = ["./Source/sub_1.json", "./Source/sub_2.json", "./Source/sub_3.json", "./Source/sub_4.json"];
-	async.map(fileNames, function(fname,callback) {
-		fs.readFile(fname, callback);
-	}, function(err,results) {
-		//console.log(JSON.parse(results[0]));
-		//console.log(err ? err : results);
-		res.writeHead(200);
-		res.write("<html><body>");
-		async.parallel(
-		[function(callback) {
-			//console.log("1st Func");
-			findMatch(JSON.parse(results[0]), qId, res);
-		},
-		function(callback) {
-			//console.log("2nd Func");
-			findMatch(JSON.parse(results[1]), qId, res);
-		},
-		function(callback) {
-			//console.log("3rd Func");
-			findMatch(JSON.parse(results[2]), qId, res);
-		},
-		function(callback) {
-			//console.log("4th Func");
-			findMatch(JSON.parse(results[3]), qId, res, 1);
-		}],
-		function(err, result) {
-			console.log("[INFO] Final Results : \n" + result);
-		});
-	});
+	//async.map will read the subject files in parallel
+	async.map(fileNames, 
+		function(fname,callback) {
+			fs.readFile(fname, callback);
+		}, 
+		function(err,results) {
+			//
+			res.writeHead(200);
+			res.write("<html><body>");
+			//async.parallel will perform task on files read by async.map
+			async.parallel(
+				//Array of functions which will get execute in parallel manner
+				[function(callback) {
+					//console.log("1st Func");
+					setTimeout(function() {
+					   findMatch(JSON.parse(results[0]), qId, res);
+					}, 3000);
+				},
+				function(callback) {
+					//console.log("2nd Func");
+					findMatch(JSON.parse(results[1]), qId, res);
+				},
+				function(callback) {
+					//console.log("3rd Func");
+					setTimeout(function() {
+					   findMatch(JSON.parse(results[2]), qId, res, 1);
+					}, 6000);
+				},
+				function(callback) {
+					//console.log("4th Func");
+					findMatch(JSON.parse(results[3]), qId, res);
+				}],
+				function(err, result) {
+					console.log("[INFO] Final Results : \n" + result);
+				}
+			);
+		}
+	);
 	//res.end("Done!");
 	//return finalResult;
 };
@@ -47,6 +60,7 @@ function findMatch(jsonData, qId, res, end) {
 		}
 	});
 	
+	//If match found then write it to response
 	if(found[0] != null) {
 		//finalResult.push({subId: sub_1_json.subjectId, subName: sub_1_json.subjectName, score: found[found.length - 1].score});
 		
@@ -67,36 +81,3 @@ function findMatch(jsonData, qId, res, end) {
 		res.end("Done!");
 	}
 }
-
-/*
-exports.searchById = function(qId) {
-	var fileNames = ["../Source/sub_1.json", "../Source/sub_2.json", "../Source/sub_3.json", "../Source/sub_4.json"];
-	async.map(fileNames, fs.readFile, function(err, data) {
-		
-		async.parallel(
-		[function(callback) {
-			console.log("1st Func");
-			//console.log(data[0]);
-			var sub_1_json = JSON.parse(data[0]);
-			//console.log(sub_1_json);
-		},
-		function(callback) {
-			console.log("2nd Func");
-			var sub_2_json = JSON.parse(data[1]);
-			console.log(sub_2_json);
-		},
-		function(callback) {
-			console.log("3rd Func");
-			var sub_3_json = JSON.parse(data[2]);
-			console.log(sub_3_json);
-		},
-		function(callback) {
-			console.log("4th Func");
-			var sub_4_json = JSON.parse(data[3]);
-			console.log(sub_4_json);
-		}],
-		function(err, rusult) {
-			//console.log(result);
-		});
-	});
-};*/

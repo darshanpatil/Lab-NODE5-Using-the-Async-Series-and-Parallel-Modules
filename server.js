@@ -29,6 +29,8 @@ function handleRequest(req, res) {
 	//Call IdModule to get id from JSON for requested email
 	var qId = idModule.getId(qEmail, student);
 
+	//If qId is null then return 404 http status as response
+	//No student with email id exist in system
 	if(qId == null) {
 		res.writeHead(404);
 		res.end("Student with email '" + qEmail + "' is not registered");
