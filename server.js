@@ -15,6 +15,7 @@ var server = http.createServer(handleRequest);
 function handleRequest(req, res) {
 	var student = studentJ.students;
 	var reqMethod = req.method;
+	
 	//Proceed only if request method is 'GET'
 	if(reqMethod != 'GET') {
 		res.writeHead(500);
@@ -24,16 +25,22 @@ function handleRequest(req, res) {
 	
 	//Email parameter from request
 	var qEmail = query.qEmail;
-	console.log(qEmail);
+	
 	//Call IdModule to get id from JSON for requested email
 	var qId = idModule.getId(qEmail, student);
+
+	if(qId == null) {
+		res.writeHead(404);
+		res.end("Student with email '" + qEmail + "' is not registered");
+		return;
+	}
 	
 	//Call SearchModule to get subject details for respective student
-	//var result = searchModule.searchById(qId);
+	var result = searchModule.searchById(qId, res);
 	
 	//Write response header as 200 OK and return searched data
-	res.writeHead(200);
-	res.end(qId.toString());
+	//res.writeHead(200);
+	//res.end(qId.toString());
 }
 
 //Start server on @PORT
